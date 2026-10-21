@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define LENGTH_NUMBERS 5
 #define LENGTH_STARS 2
@@ -29,8 +30,8 @@ void fillPlayerNumbers(int playerNumbers[], int taille) {
             }
 
             // Verifier si le numero est inferieur ou egale a 0 ou superieur a 50
-            if (nombre <= 0 || nombre > 50) {
-                printf("Le numéros doit etre compris entre 1 et 50\n");
+            if (nombre <= 0 || nombre > 10) {
+                printf("Le numéros doit etre compris entre 1 et 10\n");
                 invalide = 1;
                 continue;
             }
@@ -74,8 +75,8 @@ void fillPlayerStars(int playerStars[], int taille) {
             }
 
             // Verifier si le numero est inferieur ou egale a 0 ou superieur a 12
-            if (nombre <= 0 || nombre > 12) {
-                printf("Le numéros doit etre compris entre 1 et 12\n");
+            if (nombre <= 0 || nombre > 7) {
+                printf("Le numéros doit etre compris entre 1 et 7\n");
                 invalide = 1;
                 continue;
             }
@@ -102,7 +103,7 @@ void fillGameNumbers(int gameNumbers[], int taille) {
     for (i = 0; i < taille; i++) {
         do {
             invalide = 0;
-            gameNumbers[i] = rand() % 50 + 1; // 1 a 50
+            gameNumbers[i] = (rand() % 10) + 1; // 1 a 50
 
             for (j = 0; j < i; j++) {
                 if (gameNumbers[i] == gameNumbers[j]) {
@@ -121,7 +122,7 @@ void fillGameStars(int gameStars[], int taille) {
     for (i = 0; i < taille; i++) {
         do {
             invalide = 0;
-            gameStars[i] = (rand() % 12) + 1; // 1 a 12
+            gameStars[i] = (rand() % 7) + 1; // 1 a 12
 
             for (j = 0; j < i; j++) {
                 if (gameStars[i] == gameStars[j]) {
@@ -162,67 +163,79 @@ int main() {
     int gameNumbers[LENGTH_NUMBERS];
     int gameStars[LENGTH_STARS];
     int playerGain = 0;
+    bool replay = true;
 
-    // Game Numbers
-    fillGameNumbers(gameNumbers, LENGTH_NUMBERS);
+    do {
+    
+        // Game Numbers
+        fillGameNumbers(gameNumbers, LENGTH_NUMBERS);
 
-    // Game Stars
-    fillGameStars(gameStars, LENGTH_STARS);
+        // Game Stars
+        fillGameStars(gameStars, LENGTH_STARS);
 
-    // Player Numbers
-    printf("Choisissez vos numéros (1 - 50)\n");
-    fillPlayerNumbers(playerNumbers, LENGTH_NUMBERS);
-    printf("Vos numéros:\n");
-    printArray(playerNumbers, LENGTH_NUMBERS);
+        // Player Numbers
+        printf("Choisissez vos numéros (1 - 10)\n");
+        fillPlayerNumbers(playerNumbers, LENGTH_NUMBERS);
+        printf("Vos numéros:\n");
+        printArray(playerNumbers, LENGTH_NUMBERS);
 
-    // Player Stars
-    printf("Choisissez vos étoiles (1 - 12)\n");
-    fillPlayerStars(playerStars, LENGTH_STARS);
-    printf("Vos Etoiles:\n");
-    printArray(playerStars, LENGTH_STARS);
+        // Player Stars
+        printf("Choisissez vos étoiles (1 - 7)\n");
+        fillPlayerStars(playerStars, LENGTH_STARS);
+        printf("Vos Etoiles:\n");
+        printArray(playerStars, LENGTH_STARS);
 
    
-    // Nombre d'étoile et de numéros gagnants
-    int sameNbCount = sameCount(gameNumbers, playerNumbers, LENGTH_NUMBERS);
-    int sameStarsCount = sameCount(gameStars, playerStars, LENGTH_STARS);
-    printf("Nombre de numéros correspondants: %d\n", sameNbCount);
-    printf("Nombre d'étoiles correspondantes: %d\n", sameStarsCount);
+        // Nombre d'étoile et de numéros gagnants
+        int sameNbCount = sameCount(gameNumbers, playerNumbers, LENGTH_NUMBERS);
+        int sameStarsCount = sameCount(gameStars, playerStars, LENGTH_STARS);
+        printf("Nombre de numéros correspondants: %d\n", sameNbCount);
+        printf("Nombre d'étoiles correspondantes: %d\n", sameStarsCount);
 
-    // Print numeros gagnants:
-    printf("Numéro Gagnant: (pour le debug)\n");
-    printArray(gameNumbers, LENGTH_NUMBERS);
+        // Print numeros gagnants:
+        printf("Numéro Gagnant:\n");
+        printArray(gameNumbers, LENGTH_NUMBERS);
 
-    // Print etoile gagnante
-    printf("Etoiles gagnante: \n");
-    printArray(gameStars, LENGTH_STARS);
+        // Print etoile gagnante
+        printf("Etoiles gagnante: \n");
+        printArray(gameStars, LENGTH_STARS);
 
-    // Jeu
-    if (sameNbCount == 5 && sameStarsCount == 2) {
-        printf("JACKPOT !!!\n");
-        playerGain += 77777;
-    } else if (sameNbCount == 5 && sameStarsCount == 1) {
-        printf("Gain très élevé: 50000$\n");
-        playerGain += 50000;
-    } else if (sameNbCount == 5) {
-        printf("Gain Elevé: 10000$\n");
-        playerGain += 10000;
-    } else if (sameNbCount == 4 && sameStarsCount == 2) {
-        printf("Gain Moyen: 1000$\n");
-        playerGain += 1000;
-    } else if (sameNbCount == 4 && sameStarsCount == 1) {
-        printf("Gain plus petit: 300$\n");
-        playerGain += 300;
-    } else if (sameNbCount == 3 && sameStarsCount == 2) {
-        printf("Petit Gain: 50$\n");
-        playerGain += 50;
-    } else if (sameNbCount == 3 && sameStarsCount == 1) {
-        printf("Gain minimal: 20$\n");
-        playerGain += 20;
-    } else {
-        printf("Perdu !!!");
-    }
+        // Jeu
+        if (sameNbCount == 5 && sameStarsCount == 2) {
+            printf("JACKPOT !!!\n");
+            playerGain += 77777;
+        } else if (sameNbCount == 5 && sameStarsCount == 1) {
+            printf("Gain très élevé: 50000$\n");
+            playerGain += 50000;
+        } else if (sameNbCount == 5) {
+            printf("Gain Elevé: 10000$\n");
+            playerGain += 10000;
+        } else if (sameNbCount == 4 && sameStarsCount == 2) {
+            printf("Gain Moyen: 1000$\n");
+            playerGain += 1000;
+        } else if (sameNbCount == 4 && sameStarsCount == 1) {
+            printf("Gain plus petit: 300$\n");
+            playerGain += 300;
+        } else if (sameNbCount == 3 && sameStarsCount == 2) {
+            printf("Petit Gain: 50$\n");
+            playerGain += 50;
+        } else if (sameNbCount == 3 && sameStarsCount == 1) {
+            printf("Gain minimal: 20$\n");
+            playerGain += 20;
+        } else {
+            printf("Perdu !!!");
+        }
 
-    printf("Votre gain: %d$\n", playerGain);
+        printf("Votre gain: %d$\n", playerGain);
+        char yesorno;
+        printf("Rejouer ? (y or n)");
+        scanf(" %c", &yesorno);
+        if (yesorno == 'y') {
+            replay = true;
+        } else {
+            replay = false;
+        }
+    } while(replay);
 
     return 0;
 }
